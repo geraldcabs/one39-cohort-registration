@@ -193,8 +193,10 @@ function CheckoutForm({ formData, selectedPlan, onBack }) {
 
           {isRecurring && (
             <p className="payment-recurring-note">
-              Your card will be charged {selectedPlan.display} monthly for 10
-              months. You can cancel anytime.
+              {selectedPlan.id.includes('semi')
+                ? `Your card will be charged ${selectedPlan.display} on the 1st and 15th of each month for 10 months.`
+                : `Your card will be charged ${selectedPlan.display} monthly for 10 months.`}{' '}
+              You can cancel anytime.
             </p>
           )}
 

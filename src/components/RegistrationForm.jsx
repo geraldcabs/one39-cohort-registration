@@ -2,9 +2,9 @@ import { useState } from 'react'
 import CoachCard from './CoachCard'
 
 const COACHES = [
-  'Naomi Rain',
+  'Naomi Raine',
   'Todd Galberth',
-  'Kenny Leonard',
+  'Kenneth Leonard',
   'Tasha Cobbs Leonard',
 ]
 

@@ -8,6 +8,16 @@ const EARLY_BIRD_END = new Date(
 
 const PLANS = [
   {
+    id: 'early-semi',
+    tier: 'early',
+    name: 'Early Bird Semi-Monthly',
+    price: 249.5,
+    display: '$249.50',
+    interval: '/2x mo',
+    note: 'Charged 1st & 15th · 10 months',
+    total: '$4,990 total',
+  },
+  {
     id: 'early-monthly',
     tier: 'early',
     name: 'Early Bird Monthly',
@@ -26,6 +36,16 @@ const PLANS = [
     interval: '',
     note: 'One-time payment',
     badge: 'Best Value',
+  },
+  {
+    id: 'general-semi',
+    tier: 'general',
+    name: 'General Semi-Monthly',
+    price: 299.5,
+    display: '$299.50',
+    interval: '/2x mo',
+    note: 'Charged 1st & 15th · 10 months',
+    total: '$5,990 total',
   },
   {
     id: 'general-monthly',
