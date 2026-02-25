@@ -2,10 +2,10 @@ import { useState } from 'react'
 import CoachCard from './CoachCard'
 
 const COACHES = [
-  'Naomi Raine',
-  'Todd Galberth',
   'Kenneth Leonard',
   'Tasha Cobbs Leonard',
+  'Todd Galberth',
+  'Naomi Raine',
 ]
 
 export default function RegistrationForm({ formData, setFormData, onNext }) {
@@ -32,6 +32,7 @@ export default function RegistrationForm({ formData, setFormData, onNext }) {
     if (!formData.phone.trim()) next.phone = 'Phone number is required'
     if (!formData.coach) next.coach = 'Please select a coach'
     if (!formData.termsAccepted) next.termsAccepted = 'You must accept the terms'
+    if (!formData.noRecordingAccepted) next.noRecordingAccepted = 'You must acknowledge the no-recording policy'
     return next
   }
 
@@ -52,7 +53,7 @@ export default function RegistrationForm({ formData, setFormData, onNext }) {
           <p className="form-step-label">Step 1 of 3</p>
           <h1 className="form-title">Join the Circle</h1>
           <p className="form-subtitle">
-            Register for the next Creative Circle cohort.
+            Register for the next CreativeCircle cohort.
           </p>
         </div>
 
@@ -197,6 +198,25 @@ export default function RegistrationForm({ formData, setFormData, onNext }) {
           {errors.termsAccepted && (
             <span className="form-error" style={{ marginTop: '-1rem', display: 'block', marginBottom: '1rem' }}>
               {errors.termsAccepted}
+            </span>
+          )}
+
+          <label className="terms-label">
+            <input
+              type="checkbox"
+              className="terms-checkbox"
+              checked={formData.noRecordingAccepted}
+              onChange={(e) => update('noRecordingAccepted', e.target.checked)}
+            />
+            <span className="terms-checkmark" />
+            <span className="terms-text">
+              I understand that recording of any kind is strictly prohibited
+              during live sessions. <span className="required">*</span>
+            </span>
+          </label>
+          {errors.noRecordingAccepted && (
+            <span className="form-error" style={{ marginTop: '-1rem', display: 'block', marginBottom: '1rem' }}>
+              {errors.noRecordingAccepted}
             </span>
           )}
 

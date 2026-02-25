@@ -7,6 +7,7 @@ import {
 export default function Vision() {
   return (
     <section className="vision" id="vision">
+      <div className="vision-bg" />
       <div className="vision-inner">
         <p className="section-label">{VISION_LABEL}</p>
         <h2 className="section-headline">{VISION_HEADLINE}</h2>

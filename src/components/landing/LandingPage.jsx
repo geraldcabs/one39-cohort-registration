@@ -1,7 +1,10 @@
 import Hero from './Hero'
+import StatsBar from './StatsBar'
+import CountdownBanner from './CountdownBanner'
+import StickyNav from './StickyNav'
 import Vision from './Vision'
-import Curriculum from './Curriculum'
 import Faculty from './Faculty'
+import Curriculum from './Curriculum'
 import Faq from './Faq'
 import Cta from './Cta'
 
@@ -12,17 +15,21 @@ export default function LandingPage() {
         <div className="header-inner">
           <img
             src="/logo 2.png"
-            alt="One39 Creative Circle"
+            alt="One39 CreativeCircle"
             className="header-logo"
           />
         </div>
       </header>
 
+      <StickyNav />
+
       <main>
         <Hero />
+        <StatsBar />
+        <CountdownBanner />
         <Vision />
-        <Curriculum />
         <Faculty />
+        <Curriculum />
         <Faq />
         <Cta />
       </main>

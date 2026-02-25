@@ -134,6 +134,17 @@ export default function PricingPage({
               />
             ))}
           </div>
+          <p className="pricing-group-contact">
+            For groups larger than 8, email{' '}
+            <a href="mailto:kylie@one39.co" className="pricing-group-link">
+              kylie@one39.co
+            </a>
+          </p>
+        </div>
+
+        <div className="pricing-live-callout">
+          <span className="pricing-live-dot" />
+          All Sessions Are Live — Not Pre-Recorded, Not a Webinar
         </div>
 
         {error && <span className="form-error">{error}</span>}

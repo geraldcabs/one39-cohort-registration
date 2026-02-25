@@ -3,10 +3,11 @@ import { FRAMEWORKS } from '../../data/curriculum'
 export default function Curriculum() {
   return (
     <section className="curriculum" id="curriculum">
+      <div className="curriculum-bg" />
       <div className="curriculum-inner">
         <p className="section-label">The Frameworks</p>
         <h2 className="section-headline">
-          Six Systems.<br />Zero Guesswork.
+          Zero Guesswork.
         </h2>
         <p className="curriculum-intro">
           Each framework is taught, coached, and implemented over the 10-month

@@ -17,11 +17,13 @@ export default function Faculty() {
           {FACULTY.map((person) => (
             <div key={person.name} className="faculty-card">
               <div className="faculty-headshot">
-                <span className="faculty-headshot-label">Headshot Needed</span>
+                <img
+                  src={person.headshot}
+                  alt={person.name}
+                  className="faculty-headshot-img"
+                />
               </div>
               <h3 className="faculty-name">{person.name}</h3>
-              <p className="faculty-role">{person.role}</p>
-              <p className="faculty-church">{person.church}</p>
               <div className="faculty-bio-placeholder">
                 Bio Needed from One39
               </div>

@@ -121,7 +121,7 @@ function CheckoutForm({ formData, selectedPlan, onBack }) {
               className="form-subtitle"
               style={{ textAlign: 'center', maxWidth: '400px', margin: '0 auto' }}
             >
-              Welcome to the Creative Circle, {formData.firstName}. Check your
+              Welcome to CreativeCircle, {formData.firstName}. Check your
               email for next steps.
             </p>
           </div>
@@ -137,7 +137,7 @@ function CheckoutForm({ formData, selectedPlan, onBack }) {
           <p className="form-step-label">Step 3 of 3</p>
           <h1 className="form-title">Complete Payment</h1>
           <p className="form-subtitle">
-            Secure your spot in the Creative Circle cohort.
+            Secure your spot in the CreativeCircle cohort.
           </p>
         </div>
 
@@ -173,6 +173,16 @@ function CheckoutForm({ formData, selectedPlan, onBack }) {
               <span className="order-value">{selectedPlan.total}</span>
             </div>
           )}
+          <div className="order-divider" />
+          <div className="order-row order-row--policy">
+            <span className="order-policy-icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <circle cx="7" cy="7" r="6" stroke="var(--red)" strokeWidth="1.5" />
+                <line x1="4" y1="4" x2="10" y2="10" stroke="var(--red)" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </span>
+            <span className="order-policy-text">No Recording Permitted</span>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit}>

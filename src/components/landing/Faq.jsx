@@ -10,6 +10,8 @@ export default function Faq() {
 
   return (
     <section className="faq" id="faq">
+      <div className="faq-bg" />
+      <div className="faq-grain" />
       <div className="faq-inner">
         <p className="section-label">FAQ</p>
         <h2 className="section-headline">Common Questions</h2>

@@ -1,4 +1,13 @@
+import { FACULTY } from '../data/faculty'
+
+const HEADSHOT_MAP = {}
+FACULTY.forEach((f) => {
+  HEADSHOT_MAP[f.name] = f.headshot
+})
+
 export default function CoachCard({ name, selected, onSelect }) {
+  const headshot = HEADSHOT_MAP[name]
+
   return (
     <button
       type="button"
@@ -7,7 +16,11 @@ export default function CoachCard({ name, selected, onSelect }) {
       aria-pressed={selected}
     >
       <div className="coach-headshot">
-        <span className="coach-headshot-label">Headshot Needed</span>
+        {headshot ? (
+          <img src={headshot} alt={name} className="coach-headshot-img" />
+        ) : (
+          <span className="coach-headshot-label">Headshot Needed</span>
+        )}
       </div>
       <div className="coach-info">
         <span className="coach-name">{name}</span>

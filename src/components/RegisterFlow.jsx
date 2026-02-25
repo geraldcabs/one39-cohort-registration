@@ -14,6 +14,7 @@ export default function RegisterFlow() {
     position: '',
     coach: '',
     termsAccepted: false,
+    noRecordingAccepted: false,
   })
   const [selectedPlan, setSelectedPlan] = useState(null)
 
@@ -21,7 +22,7 @@ export default function RegisterFlow() {
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       <header className="header">
         <div className="header-inner">
-          <img src="/logo 2.png" alt="One39 Creative Circle" className="header-logo" />
+          <img src="/logo 2.png" alt="One39 CreativeCircle" className="header-logo" />
         </div>
       </header>
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>

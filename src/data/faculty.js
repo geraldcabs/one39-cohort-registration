@@ -1,22 +1,18 @@
 export const FACULTY = [
   {
-    name: 'Naomi Raine',
-    role: 'Pastor',
-    church: 'Fresh Start Church',
-  },
-  {
-    name: 'Todd Galberth',
-    role: 'Executive Pastor',
-    church: 'Change Church',
-  },
-  {
     name: 'Kenneth Leonard',
-    role: 'Lead Pastor',
-    church: 'The Purpose Place Church',
+    headshot: '/Images/Headshots/DSC09920.JPG',
   },
   {
     name: 'Tasha Cobbs Leonard',
-    role: 'Lead Pastor',
-    church: 'The Purpose Place Church',
+    headshot: '/Images/Headshots/DSC09956.JPG',
+  },
+  {
+    name: 'Todd Galberth',
+    headshot: '/Images/Headshots/DSC09933.JPG',
+  },
+  {
+    name: 'Naomi Raine',
+    headshot: '/Images/Headshots/DSC09947.JPG',
   },
 ]

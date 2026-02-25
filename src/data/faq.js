@@ -1,7 +1,7 @@
 export const FAQ_ITEMS = [
   {
-    question: 'What exactly is the Creative Circle?',
-    answer: 'Creative Circle is a 10-month coaching cohort for worship leaders and creative directors who want to fundamentally transform their Sunday experience. You\'ll be paired with one of four world-class coaches and work through six proprietary frameworks designed to create lasting, structural change in how you lead worship.',
+    question: 'What exactly is CreativeCircle?',
+    answer: 'CreativeCircle is a 10-month coaching cohort for worship leaders and creative directors who want to fundamentally transform their Sunday experience. You\'ll be paired with one of four world-class coaches and work through proprietary frameworks designed to create lasting, structural change in how you lead worship.',
   },
   {
     question: 'Who is this for?',
@@ -9,7 +9,7 @@ export const FAQ_ITEMS = [
   },
   {
     question: 'What does the schedule look like?',
-    answer: 'The cohort meets virtually twice per month starting April 1, 2026. Sessions are live with your assigned coach and cohort group. Between sessions, you\'ll have framework assignments and implementation tasks to apply directly to your church context. Expect to invest 4–6 hours per month.',
+    answer: 'The cohort meets virtually twice per month starting April 1, 2026. All sessions are LIVE with your assigned coach and cohort group — not pre-recorded, not a webinar. Between sessions, you\'ll have framework assignments and implementation tasks to apply directly to your church context. Expect to invest 4–6 hours per month.',
   },
   {
     question: 'Can I switch coaches after registration?',
@@ -21,6 +21,10 @@ export const FAQ_ITEMS = [
   },
   {
     question: 'What if I\'m part of a larger team — is there a group rate?',
-    answer: 'Yes. Group registration is available for teams of 3–8 people at $1,200/month or $10,000 one-time. For teams larger than 8, contact kylie@one39.co for custom pricing. Group members share a coach but each receive individual access to all frameworks and materials.',
+    answer: 'Yes. Group registration is available for teams of 3–8 people at $1,200/month or $10,000 one-time. For groups larger than 8, email kylie@one39.co for custom pricing. Group members share a coach but each receive individual access to all frameworks and materials.',
+  },
+  {
+    question: 'Are sessions recorded?',
+    answer: 'No. All CreativeCircle sessions are live only. Recording of any kind is strictly prohibited during live sessions. This policy exists to protect the integrity of the coaching environment and ensure coaches and participants can speak freely.',
   },
 ]
