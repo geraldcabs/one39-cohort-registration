@@ -1107,6 +1107,73 @@ a {
   background: var(--gray-100);
 }
 
+/* Dark form sections: solid white outline buttons */
+.form-section--dark .btn-primary {
+  background: var(--white);
+  color: var(--black);
+  border-color: var(--white);
+}
+
+.form-section--dark .btn-primary:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--black);
+}
+
+.form-section--dark .btn-primary:disabled {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.form-section--dark .btn-primary:disabled:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.form-section--dark .btn-secondary {
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.form-section--dark .btn-secondary:hover {
+  border-color: var(--white);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Light form sections: solid black buttons */
+.form-section--light .btn-primary {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+.form-section--light .btn-primary:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--black);
+}
+
+/* Back to home link */
+.form-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+}
+
+.form-back-link:hover {
+  color: var(--white);
+}
+
 /* ——————————————————————————————————
    FORM SECTION
    —————————————————————————————————— */
@@ -1428,8 +1495,13 @@ a {
 .terms-link {
   color: var(--gold);
   text-decoration: none;
+  background: none;
+  border: none;
   border-bottom: 1px solid var(--gold);
-  transition: color 0.15s;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
 }
 
 .terms-link:hover {
