@@ -120,6 +120,11 @@ a {
   padding: 0 5.5rem;
 }
 
+.header--solid {
+  position: relative;
+  background: var(--black);
+}
+
 .header-inner {
   display: flex;
   align-items: center;

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import RegistrationForm from './RegistrationForm'
 import PricingPage from './PricingPage'
 import PaymentPage from './PaymentPage'
@@ -20,9 +21,11 @@ export default function RegisterFlow() {
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-      <header className="header">
+      <header className="header header--solid">
         <div className="header-inner">
-          <img src="/logo 3.png" alt="One39 CreativeCircle" className="header-logo" />
+          <Link to="/" className="header-logo-link">
+            <img src="/logo 3.png" alt="One39 CreativeCircle" className="header-logo" />
+          </Link>
         </div>
       </header>
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
