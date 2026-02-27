@@ -214,7 +214,7 @@ export default async function handler(req, res) {
         currency: 'usd',
         customer: customerId,
         payment_method: paymentMethodId,
-        description: `${plan.label} - Registration`,
+        description: plan.label,
         metadata: { coach, churchName, position, planId },
         confirm: true,
         return_url: `${process.env.VITE_APP_URL}/success`,
