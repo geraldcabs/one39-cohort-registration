@@ -4,16 +4,12 @@ import { PLANS as PLAN_LIST } from '../src/data/pricing.js';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 function getCancelAt() {
-  // 10 months from signup
   const tenMonths = new Date();
   tenMonths.setUTCMonth(tenMonths.getUTCMonth() + 10);
   tenMonths.setUTCDate(1);
   tenMonths.setUTCHours(12, 0, 0, 0);
 
-  // Fixed Jan 1 2027
   const fixedDate = new Date(Date.UTC(2027, 0, 1, 12, 0, 0));
-
-  // Use whichever comes first
   const cancelDate = tenMonths < fixedDate ? tenMonths : fixedDate;
   return Math.floor(cancelDate.getTime() / 1000);
 }
@@ -32,17 +28,13 @@ const PLANS = Object.fromEntries(
 );
 
 async function createPrice(label, amount, isOneTime = false) {
-  const existingProducts = await stripe.products.search({
-    query: `name:"${label}"`,
-  });
+  const existingProducts = await stripe.products.search({ query: `name:"${label}"` });
 
   let product;
   if (existingProducts.data.length > 0) {
     product = existingProducts.data[0];
-    console.log('♻️ Reusing existing product:', product.id);
   } else {
     product = await stripe.products.create({ name: label });
-    console.log('🆕 Created new product:', product.id);
   }
 
   return await stripe.prices.create({
@@ -53,16 +45,11 @@ async function createPrice(label, amount, isOneTime = false) {
   });
 }
 
-// ---- MONDAY.COM ----
-
 async function getOrCreateGroup(coachName) {
   const query = `
     query {
       boards(ids: [${process.env.MONDAY_BOARD_ID}]) {
-        groups {
-          id
-          title
-        }
+        groups { id title }
       }
     }
   `;
@@ -81,10 +68,7 @@ async function getOrCreateGroup(coachName) {
   const groups = data.data.boards[0].groups;
   const match = groups.find(g => g.title.toLowerCase() === coachName.toLowerCase());
 
-  if (match) {
-    console.log('✅ Found existing group:', match.id);
-    return match.id;
-  }
+  if (match) return match.id;
 
   const createGroup = `
     mutation {
@@ -105,18 +89,15 @@ async function getOrCreateGroup(coachName) {
   });
 
   const createData = await createRes.json();
-  console.log('✅ Created new group for coach:', coachName);
   return createData.data.create_group.id;
 }
 
 async function getStripePortalLink(customerId) {
   try {
-    console.log('🔗 Generating portal link for:', customerId);
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: process.env.VITE_APP_URL,
     });
-    console.log('✅ Portal link:', session.url);
     return session.url;
   } catch (err) {
     console.error('❌ Portal link error:', err.message);
@@ -178,43 +159,23 @@ async function addToMonday({ name, email, phone, church, coach, planLabel, custo
   }
 }
 
-// ---- END MONDAY.COM ----
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const {
-    customerId,
-    paymentMethodId,
-    planId,
-    coach,
-    churchName,
-    position,
-    name,
-    email,
-    phone,
-  } = req.body;
-
-  console.log('📥 Confirm payment request:', { customerId, planId });
+  const { customerId, paymentMethodId, planId, coach, churchName, position, name, email, phone } = req.body;
 
   const plan = PLANS[planId];
-  if (!plan) {
-    console.error('❌ Invalid planId:', planId);
-    return res.status(400).json({ error: 'Invalid plan' });
-  }
+  if (!plan) return res.status(400).json({ error: 'Invalid plan' });
 
   const cancelAt = getCancelAt();
-  console.log('📅 Cancel date:', new Date(cancelAt * 1000).toUTCString());
 
   try {
-    console.log('💳 Attaching payment method...');
     await stripe.paymentMethods.attach(paymentMethodId, { customer: customerId });
     await stripe.customers.update(customerId, {
       invoice_settings: { default_payment_method: paymentMethodId },
     });
-    console.log('✅ Payment method attached');
 
-    // ONE-TIME PAYMENT
+    // ONE-TIME
     if (plan.type === 'one_time') {
       const price = await createPrice(plan.label, plan.amount, true);
       const paymentIntent = await stripe.paymentIntents.create({
@@ -238,30 +199,22 @@ export default async function handler(req, res) {
     if (plan.type === 'semi-monthly') {
       const now = new Date();
       const day = now.getUTCDate();
-
       let nextFirst, nextFifteenth;
 
       if (day >= 1 && day <= 14) {
-        // Register 1-14 → next charge 15th this month, then 1st next month
         nextFifteenth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 15, 12, 0, 0));
         nextFirst = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1, 12, 0, 0));
       } else {
-        // Register 15-31 → next charge 1st next month, then 15th next month
         nextFirst = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1, 12, 0, 0));
         nextFifteenth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 15, 12, 0, 0));
       }
 
-      console.log('📅 Next 1st:', nextFirst.toUTCString());
-      console.log('📅 Next 15th:', nextFifteenth.toUTCString());
-
-      // Charge immediately on registration
-      console.log('💳 Charging immediately on registration...');
       const immediatePayment = await stripe.paymentIntents.create({
         amount: plan.amount,
         currency: 'usd',
         customer: customerId,
         payment_method: paymentMethodId,
-        description: `${plan.label} - Registration charge`,
+        description: `${plan.label} - Registration`,
         metadata: { coach, churchName, position, planId },
         confirm: true,
         return_url: `${process.env.VITE_APP_URL}/success`,
@@ -269,10 +222,7 @@ export default async function handler(req, res) {
       console.log('✅ Immediate charge confirmed:', immediatePayment.id);
 
       const price = await createPrice(plan.label, plan.amount);
-      console.log('✅ Price created:', price.id);
 
-      // Sub1 — billed on 1st every month
-      console.log('💳 Creating Sub1 (billed on 1st)...');
       const sub1 = await stripe.subscriptions.create({
         customer: customerId,
         items: [{ price: price.id }],
@@ -282,10 +232,7 @@ export default async function handler(req, res) {
         cancel_at: cancelAt,
         metadata: { coach, churchName, position, planId, billing_day: '1st' },
       });
-      console.log('✅ Sub1 created:', sub1.id);
 
-      // Sub2 — billed on 15th every month
-      console.log('💳 Creating Sub2 (billed on 15th)...');
       const sub2 = await stripe.subscriptions.create({
         customer: customerId,
         items: [{ price: price.id }],
@@ -295,7 +242,8 @@ export default async function handler(req, res) {
         cancel_at: cancelAt,
         metadata: { coach, churchName, position, planId, billing_day: '15th' },
       });
-      console.log('✅ Sub2 created:', sub2.id);
+
+      console.log('✅ Semi-monthly subs created:', sub1.id, sub2.id);
 
       const portalLink = await getStripePortalLink(customerId);
       await addToMonday({ name, email, phone, church: churchName, coach, planLabel: plan.label, customerId, subscriptionId: sub1.id, portalLink });

@@ -1,4 +1,8 @@
 export default async function handler(req, res) {
+  if (req.query.secret !== 'creativecircle-admin-2024') {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
   const query = `
     query {
       boards(ids: [${process.env.MONDAY_BOARD_ID}]) {
