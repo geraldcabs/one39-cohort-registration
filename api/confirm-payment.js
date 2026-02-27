@@ -4,10 +4,17 @@ import { PLANS as PLAN_LIST } from '../src/data/pricing.js';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 function getCancelAt() {
-  const cancelDate = new Date();
-  cancelDate.setUTCMonth(cancelDate.getUTCMonth() + 10);
-  cancelDate.setUTCDate(1);
-  cancelDate.setUTCHours(12, 0, 0, 0);
+  // 10 months from signup
+  const tenMonths = new Date();
+  tenMonths.setUTCMonth(tenMonths.getUTCMonth() + 10);
+  tenMonths.setUTCDate(1);
+  tenMonths.setUTCHours(12, 0, 0, 0);
+
+  // Fixed Jan 1 2027
+  const fixedDate = new Date(Date.UTC(2027, 0, 1, 12, 0, 0));
+
+  // Use whichever comes first
+  const cancelDate = tenMonths < fixedDate ? tenMonths : fixedDate;
   return Math.floor(cancelDate.getTime() / 1000);
 }
 
@@ -79,7 +86,6 @@ async function getOrCreateGroup(coachName) {
     return match.id;
   }
 
-  // Create new group if coach doesn't exist yet
   const createGroup = `
     mutation {
       create_group(board_id: ${process.env.MONDAY_BOARD_ID}, group_name: "${coachName}") {
@@ -103,10 +109,25 @@ async function getOrCreateGroup(coachName) {
   return createData.data.create_group.id;
 }
 
-async function addToMonday({ name, email, phone, church, coach, planLabel, customerId, subscriptionId = '' }) {
+async function getStripePortalLink(customerId) {
+  try {
+    console.log('🔗 Generating portal link for:', customerId);
+    const session = await stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: process.env.VITE_APP_URL,
+    });
+    console.log('✅ Portal link:', session.url);
+    return session.url;
+  } catch (err) {
+    console.error('❌ Portal link error:', err.message);
+    return '';
+  }
+}
+
+async function addToMonday({ name, email, phone, church, coach, planLabel, customerId, subscriptionId = '', portalLink = '' }) {
   try {
     const groupId = await getOrCreateGroup(coach);
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const today = new Date().toISOString().split('T')[0];
 
     const columnValues = {
       "email_mm0pqws": { "email": email, "text": email },
@@ -118,6 +139,7 @@ async function addToMonday({ name, email, phone, church, coach, planLabel, custo
       "text_mm0pj8hf": subscriptionId,
       "text_mm0zpx5": church,
       "text_mm0zqd6": planLabel,
+      "link_mm0pjag5": { "url": portalLink, "text": "Stripe Portal" },
     };
 
     const mutation = `
@@ -207,45 +229,76 @@ export default async function handler(req, res) {
       });
       console.log('✅ PaymentIntent confirmed:', paymentIntent.id);
 
-      await addToMonday({ name, email, phone, church: churchName, coach, planLabel: plan.label, customerId });
+      const portalLink = await getStripePortalLink(customerId);
+      await addToMonday({ name, email, phone, church: churchName, coach, planLabel: plan.label, customerId, portalLink });
       return res.status(200).json({ success: true });
     }
 
     // SEMI-MONTHLY
     if (plan.type === 'semi-monthly') {
       const now = new Date();
-      const first = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1, 12, 0, 0));
-      const fifteenth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 15, 12, 0, 0));
-      if (Date.now() >= fifteenth.getTime()) fifteenth.setUTCMonth(fifteenth.getUTCMonth() + 1);
+      const day = now.getUTCDate();
 
-      console.log('📅 Sub1 (1st):', first.toUTCString());
-      console.log('📅 Sub2 (15th):', fifteenth.toUTCString());
+      let nextFirst, nextFifteenth;
+
+      if (day >= 1 && day <= 14) {
+        // Register 1-14 → next charge 15th this month, then 1st next month
+        nextFifteenth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 15, 12, 0, 0));
+        nextFirst = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1, 12, 0, 0));
+      } else {
+        // Register 15-31 → next charge 1st next month, then 15th next month
+        nextFirst = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1, 12, 0, 0));
+        nextFifteenth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 15, 12, 0, 0));
+      }
+
+      console.log('📅 Next 1st:', nextFirst.toUTCString());
+      console.log('📅 Next 15th:', nextFifteenth.toUTCString());
+
+      // Charge immediately on registration
+      console.log('💳 Charging immediately on registration...');
+      const immediatePayment = await stripe.paymentIntents.create({
+        amount: plan.amount,
+        currency: 'usd',
+        customer: customerId,
+        payment_method: paymentMethodId,
+        description: `${plan.label} - Registration charge`,
+        metadata: { coach, churchName, position, planId },
+        confirm: true,
+        return_url: `${process.env.VITE_APP_URL}/success`,
+      });
+      console.log('✅ Immediate charge confirmed:', immediatePayment.id);
 
       const price = await createPrice(plan.label, plan.amount);
+      console.log('✅ Price created:', price.id);
 
+      // Sub1 — billed on 1st every month
+      console.log('💳 Creating Sub1 (billed on 1st)...');
       const sub1 = await stripe.subscriptions.create({
         customer: customerId,
         items: [{ price: price.id }],
         default_payment_method: paymentMethodId,
-        billing_cycle_anchor: Math.floor(first.getTime() / 1000),
+        billing_cycle_anchor: Math.floor(nextFirst.getTime() / 1000),
         proration_behavior: 'none',
         cancel_at: cancelAt,
         metadata: { coach, churchName, position, planId, billing_day: '1st' },
       });
+      console.log('✅ Sub1 created:', sub1.id);
 
+      // Sub2 — billed on 15th every month
+      console.log('💳 Creating Sub2 (billed on 15th)...');
       const sub2 = await stripe.subscriptions.create({
         customer: customerId,
         items: [{ price: price.id }],
         default_payment_method: paymentMethodId,
-        billing_cycle_anchor: Math.floor(fifteenth.getTime() / 1000),
+        billing_cycle_anchor: Math.floor(nextFifteenth.getTime() / 1000),
         proration_behavior: 'none',
         cancel_at: cancelAt,
         metadata: { coach, churchName, position, planId, billing_day: '15th' },
       });
+      console.log('✅ Sub2 created:', sub2.id);
 
-      console.log('✅ Semi-monthly subs created:', sub1.id, sub2.id);
-
-      await addToMonday({ name, email, phone, church: churchName, coach, planLabel: plan.label, customerId, subscriptionId: sub1.id });
+      const portalLink = await getStripePortalLink(customerId);
+      await addToMonday({ name, email, phone, church: churchName, coach, planLabel: plan.label, customerId, subscriptionId: sub1.id, portalLink });
       return res.status(200).json({ success: true });
     }
 
@@ -260,7 +313,8 @@ export default async function handler(req, res) {
     });
     console.log('✅ Subscription created:', subscription.id);
 
-    await addToMonday({ name, email, phone, church: churchName, coach, planLabel: plan.label, customerId, subscriptionId: subscription.id });
+    const portalLink = await getStripePortalLink(customerId);
+    await addToMonday({ name, email, phone, church: churchName, coach, planLabel: plan.label, customerId, subscriptionId: subscription.id, portalLink });
     return res.status(200).json({ success: true });
 
   } catch (err) {
