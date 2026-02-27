@@ -17,7 +17,7 @@ const CARD_ELEMENT_OPTIONS = {
       fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
       fontSize: '15px',
       fontWeight: '500',
-      color: '#000000',
+      color: '#FFFFFF',
       '::placeholder': { color: '#8A857E' },
     },
     invalid: { color: '#C0392B' },
@@ -45,57 +45,99 @@ function CheckoutForm({ formData, selectedPlan, onBack }) {
 
   const isRecurring = selectedPlan?.interval
 
-  async function handleSubmit(e) {
-    e.preventDefault()
-    if (!stripe || !elements) return
+ async function handleSubmit(e) {
+  e.preventDefault()
+  if (!stripe || !elements) return
 
-    setStatus('processing')
-    setErrorMsg('')
+  setStatus('processing')
+  setErrorMsg('')
 
-    try {
-      const res = await fetch('/api/create-payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          planId: selectedPlan.id,
-          email: formData.email,
-          name: `${formData.firstName} ${formData.lastName}`,
-          phone: formData.phone,
-          coach: formData.coach,
-          churchName: formData.churchName,
-          position: formData.position,
-        }),
-      })
+  try {
+    // Step 1 — Create customer + SetupIntent
+    console.log('🚀 Creating customer and setup intent for plan:', selectedPlan.id)
+    const res = await fetch('/api/create-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        planId: selectedPlan.id,
+        email: formData.email,
+        name: `${formData.firstName} ${formData.lastName}`,
+        phone: formData.phone,
+        coach: formData.coach,
+        churchName: formData.churchName,
+        position: formData.position,
+      }),
+    })
 
-      const { clientSecret } = await res.json()
+    // ✅ Now also grabbing customerId
+    const data = await res.json()
+    console.log('📦 API response:', data)
 
-      const { error, paymentIntent } = await stripe.confirmCardPayment(
-        clientSecret,
-        {
-          payment_method: {
-            card: elements.getElement(CardElement),
-            billing_details: {
-              name: `${formData.firstName} ${formData.lastName}`,
-              email: formData.email,
-              phone: formData.phone,
-            },
+    if (!data.clientSecret) {
+      setErrorMsg(data.error || 'Payment setup failed')
+      setStatus('error')
+      return
+    }
+
+    // ✅ Changed from confirmCardPayment → confirmCardSetup
+    // ✅ Changed paymentIntent → setupIntent
+    console.log('💳 Confirming card setup...')
+    const { error, setupIntent } = await stripe.confirmCardSetup(
+      data.clientSecret,
+      {
+        payment_method: {
+          card: elements.getElement(CardElement),
+          billing_details: {
+            name: `${formData.firstName} ${formData.lastName}`,
+            email: formData.email,
+            phone: formData.phone,
           },
         },
-      )
+      },
+    )
 
-      if (error) {
-        setErrorMsg(error.message)
-        setStatus('error')
-      } else if (paymentIntent.status === 'succeeded') {
-        setStatus('success')
-      }
-    } catch {
-      setErrorMsg(
-        'Unable to process payment. Please check your connection and try again.',
-      )
+    if (error) {
+      console.error('❌ Card setup error:', error.message)
+      setErrorMsg(error.message)
+      setStatus('error')
+      return
+    }
+
+    // ✅ NEW Step 3 — call confirm-payment to create subscription
+    console.log('🔄 Creating subscription...')
+    const confirmRes = await fetch('/api/confirm-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customerId: data.customerId,
+        paymentMethodId: setupIntent.payment_method,
+        planId: selectedPlan.id,
+        coach: formData.coach,
+        churchName: formData.churchName,
+        position: formData.position,
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        phone: formData.phone,
+      }),
+    })
+
+    const confirmData = await confirmRes.json()
+    console.log('📦 Confirm response:', confirmData)
+
+    // ✅ Changed success check from paymentIntent.status to confirmData.success
+    if (confirmData.success) {
+      setStatus('success')
+    } else {
+      setErrorMsg(confirmData.error || 'Payment failed')
       setStatus('error')
     }
+
+  } catch (err) {
+    console.error('❌ Unexpected error:', err)
+    setErrorMsg('Unable to process payment. Please check your connection and try again.')
+    setStatus('error')
   }
+}
 
   if (status === 'success') {
     return (
