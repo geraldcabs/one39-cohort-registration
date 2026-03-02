@@ -73,8 +73,16 @@ Jane holds a Bachelor of Arts with a double major in History and Communication S
   {
     name: 'Mack Brock',
     headshot: '/Images/Headshots/Mack-Brock.png',
-    title: '',
-    summary: '',
-    bio: '',
+    title: 'Songwriter · Worship Leader · Billboard No. 1 Writer · Worship Artist',
+    summary: '20+ years shaping modern worship culture. Co-wrote "O Come to the Altar," "Do It Again," and "Resurrecting." Former Elevation Worship producer and worship leader.',
+    bio: `Mack Brock is a worship leader, songwriter, and recording artist with over 20 years of experience shaping modern worship culture. His songwriting has helped define a generation of congregational music, with songs that are sung weekly in churches across the globe.
+
+Mack co-wrote widely recognized worship anthems including "O Come to the Altar," "Do It Again," "Resurrecting," "Greater Things," and "I Am Loved." These songs have collectively generated hundreds of millions of global streams, reached No. 1 on Billboard Christian charts, and been part of projects that earned RIAA Gold and Platinum certifications. "O Come to the Altar" alone became one of the most sung worship songs worldwide and remains a staple in church repertoires internationally.
+
+He spent 10 years with Elevation Worship as a music producer and worship leader during a defining season of growth for the Grammy Award–winning collective. During his tenure, Elevation Worship became one of the most influential worship movements in the world, with multiple chart-topping albums and global impact. Mack contributed not only as a songwriter and worship leader but also as a producer, helping shape the sonic identity of songs that would reach millions.
+
+Growing up as a pastor's kid, Mack began leading worship in his father's church while still in high school. That early foundation continues to shape his ministry today. Despite decades of influence and success, his deepest passion remains unchanged: to see people encounter Jesus through worship and experience the transformative power of God's presence in a gathered community.
+
+Mack resides in Charlotte, North Carolina with his wife and their 3 children, where he continues to write, lead, and serve the local and global Church.`,
   },
 ]
