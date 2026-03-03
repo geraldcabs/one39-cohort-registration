@@ -232,12 +232,21 @@ a {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.5);
+  color: #FFFFFF;
   text-decoration: none;
   transition: color 0.25s;
 }
 
 .sticky-nav-link:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Scrolled state: muted links */
+.sticky-nav--scrolled .sticky-nav-link {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.sticky-nav--scrolled .sticky-nav-link:hover {
   color: var(--white);
 }
 
@@ -247,17 +256,28 @@ a {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  background: rgba(202, 170, 107, 0.15);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(202, 170, 107, 0.35);
-  color: var(--gold);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #FFFFFF;
   padding: 0.5rem 1.375rem;
   text-decoration: none;
   transition: background 0.25s, border-color 0.25s, color 0.25s;
 }
 
 .sticky-nav-cta:hover {
+  background: var(--white);
+  border-color: var(--white);
+  color: var(--black);
+}
+
+/* Scrolled state: gold-tinted button */
+.sticky-nav--scrolled .sticky-nav-cta {
+  background: rgba(202, 170, 107, 0.15);
+  border: 1px solid rgba(202, 170, 107, 0.35);
+  color: var(--gold);
+}
+
+.sticky-nav--scrolled .sticky-nav-cta:hover {
   background: var(--gold);
   border-color: var(--gold);
   color: var(--black);
