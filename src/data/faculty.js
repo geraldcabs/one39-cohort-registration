@@ -43,11 +43,11 @@ Originally from Raeford, North Carolina, Todd now resides in Georgia with his wi
   {
     name: 'Naomi Raine',
     headshot: '/Images/Headshots/DSC09947.JPG',
-    title: '6x Grammy Winner · Executive Worship Pastor · Maverick City Music',
-    summary: '6x Grammy Award winner and core member of Maverick City Music. Worship Pastor at Fresh Start Christian Center. Founder of ReFraine Records.',
+    title: '6x Grammy Winner · Executive Worship Pastor · Founder of ReFraine Records',
+    summary: '6x Grammy Award winner and 10x Grammy-nominated artist. Executive Worship Pastor at Fresh Start Christian Center. Founder of ReFraine Records.',
     bio: `Naomi Raine began singing at two years old and wrote her first song by the age of seven. What started as an early passion has developed into a multifaceted career spanning global ministry, executive leadership, and creative direction.
 
-She is a 6x Grammy Award-winning and 10x Grammy-nominated artist and has also received NAACP Image, Stellar, BET, Billboard, and Dove Awards. As a core member of Maverick City Music, she has contributed to globally recognized worship songs including "Jireh," "Promises," and "The Story I'll Tell."
+She is a 6x Grammy Award-winning and 10x Grammy-nominated artist and has also received NAACP Image, Stellar, BET, Billboard, and Dove Awards. She has contributed to globally recognized worship songs including "Jireh," "Promises," and "The Story I'll Tell."
 
 Since 2018, Naomi has served as Worship Pastor at Fresh Start Christian Center. With over eight years of leadership experience, she oversees worship, creative direction, and production strategy across the ministry. She plays a key role in developing the structure and flow of every service expression, from worship nights to large-scale gatherings.
 
@@ -58,7 +58,7 @@ In addition to her pastoral leadership, Naomi is the founder of ReFraine Records
   {
     name: 'Jane Williams',
     headshot: '/Images/Headshots/Jane-Williams.png',
-    headshotPosition: 'center 15%',
+    headshotPosition: 'center 35%',
     title: 'Songwriter · Worship Leader · Creative Strategist · Worship Culture Architect',
     summary: '15+ years equipping churches to build thriving worship cultures. Former Elevation Worship leader and contributing songwriter behind "Same God," "Do It Again," and "Resurrecting."',
     bio: `Jane Williams is a songwriter, worship leader, and creative strategist with over 15 years of experience equipping churches to cultivate thriving worship and creative cultures. Widely respected for her leadership within large-scale ministry environments, Jane spent 11 years with Elevation Worship, serving as both a worship leader and contributing songwriter during one of the most influential seasons in the collective's global growth.
@@ -74,7 +74,7 @@ Jane holds a Bachelor of Arts with a double major in History and Communication S
   {
     name: 'Mack Brock',
     headshot: '/Images/Headshots/Mack-Brock.png',
-    headshotPosition: 'center 10%',
+    headshotPosition: 'center 20%',
     title: 'Songwriter · Worship Leader · Billboard No. 1 Writer · Worship Artist',
     summary: '20+ years shaping modern worship culture. Co-wrote "O Come to the Altar," "Do It Again," and "Resurrecting." Former Elevation Worship producer and worship leader.',
     bio: `Mack Brock is a worship leader, songwriter, and recording artist with over 20 years of experience shaping modern worship culture. His songwriting has helped define a generation of congregational music, with songs that are sung weekly in churches across the globe.

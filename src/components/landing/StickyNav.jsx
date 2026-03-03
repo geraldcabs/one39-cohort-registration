@@ -2,20 +2,18 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function StickyNav() {
-  const [visible, setVisible] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     function onScroll() {
-      const hero = document.querySelector('.hero')
-      if (!hero) return
-      setVisible(window.scrollY > hero.offsetHeight * 0.4)
+      setScrolled(window.scrollY > 50)
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
-    <nav className={`sticky-nav${visible ? ' sticky-nav--visible' : ''}`}>
+    <nav className={`sticky-nav sticky-nav--visible${scrolled ? ' sticky-nav--scrolled' : ''}`}>
       <div className="sticky-nav-inner">
         <img
           src="/logo 3.png"
