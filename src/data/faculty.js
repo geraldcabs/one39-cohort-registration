@@ -58,7 +58,7 @@ In addition to her pastoral leadership, Naomi is the founder of ReFraine Records
   {
     name: 'Jane Williams',
     headshot: '/Images/Headshots/Jane-Williams.png',
-    headshotPosition: 'center 25%',
+    headshotPosition: 'center 35%',
     title: 'Songwriter · Worship Leader · Creative Strategist · Worship Culture Architect',
     summary: '15+ years equipping churches to build thriving worship cultures. Former Elevation Worship leader and contributing songwriter behind "Same God," "Do It Again," and "Resurrecting."',
     bio: `Jane Williams is a songwriter, worship leader, and creative strategist with over 15 years of experience equipping churches to cultivate thriving worship and creative cultures. Widely respected for her leadership within large-scale ministry environments, Jane spent 11 years with Elevation Worship, serving as both a worship leader and contributing songwriter during one of the most influential seasons in the collective's global growth.
@@ -74,7 +74,7 @@ Jane holds a Bachelor of Arts with a double major in History and Communication S
   {
     name: 'Mack Brock',
     headshot: '/Images/Headshots/Mack-Brock.png',
-    headshotPosition: 'center 10%',
+    headshotPosition: 'center 20%',
     title: 'Songwriter · Worship Leader · Billboard No. 1 Writer · Worship Artist',
     summary: '20+ years shaping modern worship culture. Co-wrote "O Come to the Altar," "Do It Again," and "Resurrecting." Former Elevation Worship producer and worship leader.',
     bio: `Mack Brock is a worship leader, songwriter, and recording artist with over 20 years of experience shaping modern worship culture. His songwriting has helped define a generation of congregational music, with songs that are sung weekly in churches across the globe.
