@@ -90,21 +90,6 @@ a {
    CLIENT MOCKUP BADGE
    —————————————————————————————————— */
 
-.mockup-badge {
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-  background: var(--black);
-  color: var(--gold);
-  font-family: var(--font);
-  font-size: 0.6875rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0.5rem 0.875rem;
-  border: 2px solid var(--gold);
-  z-index: 9999;
-}
 
 /* ——————————————————————————————————
    HEADER

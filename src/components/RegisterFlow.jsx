@@ -55,7 +55,6 @@ export default function RegisterFlow() {
       <footer className="footer">
         <p>&copy; {new Date().getFullYear()} One39. All rights reserved.</p>
       </footer>
-      <div className="mockup-badge">&#9888; Client Mockup</div>
     </div>
   )
 }

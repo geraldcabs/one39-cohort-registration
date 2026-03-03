@@ -43,11 +43,11 @@ Originally from Raeford, North Carolina, Todd now resides in Georgia with his wi
   {
     name: 'Naomi Raine',
     headshot: '/Images/Headshots/DSC09947.JPG',
-    title: '6x Grammy Winner · Executive Worship Pastor · Maverick City Music',
-    summary: '6x Grammy Award winner and core member of Maverick City Music. Worship Pastor at Fresh Start Christian Center. Founder of ReFraine Records.',
+    title: '6x Grammy Winner · Executive Worship Pastor · Founder of ReFraine Records',
+    summary: '6x Grammy Award winner and 10x Grammy-nominated artist. Executive Worship Pastor at Fresh Start Christian Center. Founder of ReFraine Records.',
     bio: `Naomi Raine began singing at two years old and wrote her first song by the age of seven. What started as an early passion has developed into a multifaceted career spanning global ministry, executive leadership, and creative direction.
 
-She is a 6x Grammy Award-winning and 10x Grammy-nominated artist and has also received NAACP Image, Stellar, BET, Billboard, and Dove Awards. As a core member of Maverick City Music, she has contributed to globally recognized worship songs including "Jireh," "Promises," and "The Story I'll Tell."
+She is a 6x Grammy Award-winning and 10x Grammy-nominated artist and has also received NAACP Image, Stellar, BET, Billboard, and Dove Awards. She has contributed to globally recognized worship songs including "Jireh," "Promises," and "The Story I'll Tell."
 
 Since 2018, Naomi has served as Worship Pastor at Fresh Start Christian Center. With over eight years of leadership experience, she oversees worship, creative direction, and production strategy across the ministry. She plays a key role in developing the structure and flow of every service expression, from worship nights to large-scale gatherings.
 
