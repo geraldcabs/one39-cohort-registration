@@ -121,6 +121,7 @@ async function addToMonday({ name, email, phone, church, coach, planLabel, custo
       "text_mm0zpx5": church,
       "text_mm0zqd6": planLabel,
       "link_mm0pjag5": { "url": portalLink, "text": "Stripe Portal" },
+      "text_mm133myq": coach,
     };
 
     const mutation = `
