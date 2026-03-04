@@ -121,7 +121,7 @@ a {
 }
 
 .header-logo {
-  width: 200px;
+  width: 100px;
   height: auto;
   display: block;
 }
@@ -215,7 +215,7 @@ a {
 }
 
 .sticky-nav-logo {
-  width: 200px;
+  width: 100px;
   height: auto;
   display: block;
 }
@@ -1993,7 +1993,7 @@ a {
   }
 
   .header-logo {
-    width: 150px;
+    width: 75px;
   }
 
   .header-nav {
