@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect  } from 'react'
 import { Link } from 'react-router-dom'
 import { loadStripe } from '@stripe/stripe-js'
 import {
@@ -46,6 +46,13 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
   const [errorMsg, setErrorMsg] = useState('')
   const [cardComplete, setCardComplete] = useState(false)
 
+  useEffect(() => {
+    window.parent.postMessage({ 
+      event: 'abandoned',
+      email: formData.email,
+    }, '*');
+  }, []);
+
   const countdown = useCountdown(EARLY_BIRD_END)
   const earlyBirdActive = countdown !== null
 
@@ -78,7 +85,6 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
     })
 
     const data = await res.json()
-    console.log('📦 API response:', data)
 
     if (!data.clientSecret) {
       setErrorMsg(data.error || 'Payment setup failed')
@@ -86,7 +92,6 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
       return
     }
 
-    console.log('💳 Confirming card setup...')
     const { error, setupIntent } = await stripe.confirmCardSetup(
       data.clientSecret,
       {
@@ -108,7 +113,6 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
       return
     }
 
-    console.log('🔄 Creating subscription...')
     const confirmRes = await fetch('/api/confirm-payment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -127,9 +131,12 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
     })
 
     const confirmData = await confirmRes.json()
-    console.log('📦 Confirm response:', confirmData)
 
     if (confirmData.success) {
+       window.parent.postMessage({ 
+        event: 'success',
+        email: formData.email,
+      }, '*');
       setStatus('success')
     } else {
       setErrorMsg(confirmData.error || 'Payment failed')
