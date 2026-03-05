@@ -21,7 +21,7 @@ export const FAQ_ITEMS = [
   },
   {
     question: 'What if I\'m part of a larger team — is there a group rate?',
-    answer: 'Yes. Group registration is available for teams of 3–8 people at $1,200/month or $10,000 one-time. For groups larger than 8, email kylie@one39.co for custom pricing. Group members share a coach but each receive individual access to all frameworks and materials.',
+    answer: 'Yes! We understand that teams may want to participate together. If you\'re interested in attending as a group, please email kylie@one39.co to discuss team pricing.',
   },
   {
     question: 'Are sessions recorded?',
