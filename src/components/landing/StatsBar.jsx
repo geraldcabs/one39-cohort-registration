@@ -21,7 +21,7 @@ export default function StatsBar() {
           <span className="stats-bar-label">Price</span>
           <span className="stats-bar-value">
             <span style={{ textDecoration: 'line-through', opacity: 0.4, marginRight: '0.35rem' }}>$399</span>
-            <span style={{ color: 'var(--gold)' }}>$299/Month</span>
+            <span style={{ color: '#FFFFFF' }}>$299/Month</span>
           </span>
         </div>
       </div>
