@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { loadStripe } from '@stripe/stripe-js'
 import {
@@ -7,6 +7,8 @@ import {
   useStripe,
   useElements,
 } from '@stripe/react-stripe-js'
+import { PLANS, EARLY_BIRD_END } from '../data/pricing'
+import { useCountdown } from '../hooks/useCountdown'
 
 const stripePromise = loadStripe(
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder',
@@ -25,12 +27,11 @@ const CARD_ELEMENT_OPTIONS = {
   },
 }
 
-export default function PaymentPage({ formData, selectedPlan, mondayItemId, onBack }) {
+export default function PaymentPage({ formData, mondayItemId, onBack }) {
   return (
     <Elements stripe={stripePromise}>
       <CheckoutForm
         formData={formData}
-        selectedPlan={selectedPlan}
         mondayItemId={mondayItemId}
         onBack={onBack}
       />
@@ -38,14 +39,20 @@ export default function PaymentPage({ formData, selectedPlan, mondayItemId, onBa
   )
 }
 
-function CheckoutForm({ formData, selectedPlan, mondayItemId, onBack }) {
+function CheckoutForm({ formData, mondayItemId, onBack }) {
   const stripe = useStripe()
   const elements = useElements()
   const [status, setStatus] = useState('idle')
   const [errorMsg, setErrorMsg] = useState('')
   const [cardComplete, setCardComplete] = useState(false)
 
-  const isRecurring = selectedPlan?.interval
+  const countdown = useCountdown(EARLY_BIRD_END)
+  const earlyBirdActive = countdown !== null
+
+  const selectedPlan = useMemo(() => {
+    const id = earlyBirdActive ? 'early-monthly' : 'general-monthly'
+    return PLANS.find((p) => p.id === id)
+  }, [earlyBirdActive])
 
  async function handleSubmit(e) {
   e.preventDefault()
@@ -55,7 +62,6 @@ function CheckoutForm({ formData, selectedPlan, mondayItemId, onBack }) {
   setErrorMsg('')
 
   try {
-    // Step 1 — Create customer + SetupIntent
     console.log('🚀 Creating customer and setup intent for plan:', selectedPlan.id)
     const res = await fetch('/api/create-payment', {
       method: 'POST',
@@ -71,7 +77,6 @@ function CheckoutForm({ formData, selectedPlan, mondayItemId, onBack }) {
       }),
     })
 
-    // ✅ Now also grabbing customerId
     const data = await res.json()
     console.log('📦 API response:', data)
 
@@ -81,8 +86,6 @@ function CheckoutForm({ formData, selectedPlan, mondayItemId, onBack }) {
       return
     }
 
-    // ✅ Changed from confirmCardPayment → confirmCardSetup
-    // ✅ Changed paymentIntent → setupIntent
     console.log('💳 Confirming card setup...')
     const { error, setupIntent } = await stripe.confirmCardSetup(
       data.clientSecret,
@@ -105,7 +108,6 @@ function CheckoutForm({ formData, selectedPlan, mondayItemId, onBack }) {
       return
     }
 
-    // ✅ NEW Step 3 — call confirm-payment to create subscription
     console.log('🔄 Creating subscription...')
     const confirmRes = await fetch('/api/confirm-payment', {
       method: 'POST',
@@ -127,7 +129,6 @@ function CheckoutForm({ formData, selectedPlan, mondayItemId, onBack }) {
     const confirmData = await confirmRes.json()
     console.log('📦 Confirm response:', confirmData)
 
-    // ✅ Changed success check from paymentIntent.status to confirmData.success
     if (confirmData.success) {
       setStatus('success')
     } else {
@@ -182,7 +183,7 @@ function CheckoutForm({ formData, selectedPlan, mondayItemId, onBack }) {
     <section className="form-section form-section--dark">
       <div className="form-container">
         <div className="form-header">
-          <p className="form-step-label">Step 3 of 3</p>
+          <p className="form-step-label">Step 2 of 2</p>
           <h1 className="form-title">Complete Payment</h1>
           <p className="form-subtitle">
             Secure your spot in the CreativeCircle cohort.
@@ -211,8 +212,7 @@ function CheckoutForm({ formData, selectedPlan, mondayItemId, onBack }) {
               {selectedPlan?.name}
             </span>
             <span className="order-value" style={{ fontWeight: 800 }}>
-              {selectedPlan?.display}
-              {selectedPlan?.interval}
+              {selectedPlan?.display}{selectedPlan?.interval}
             </span>
           </div>
           {selectedPlan?.total && (
@@ -220,6 +220,19 @@ function CheckoutForm({ formData, selectedPlan, mondayItemId, onBack }) {
               <span className="order-label">Total</span>
               <span className="order-value">{selectedPlan.total}</span>
             </div>
+          )}
+          {earlyBirdActive && (
+            <>
+              <div className="order-divider" />
+              <div className="order-row">
+                <span className="order-label" style={{ color: 'var(--gold)', fontWeight: 600 }}>
+                  Early Bird Pricing
+                </span>
+                <span className="order-value" style={{ color: 'var(--gold)', fontSize: '0.85rem' }}>
+                  {countdown.d}d {String(countdown.h).padStart(2, '0')}h {String(countdown.m).padStart(2, '0')}m remaining
+                </span>
+              </div>
+            </>
           )}
           <div className="order-divider" />
           <div className="order-row order-row--policy">
@@ -246,14 +259,10 @@ function CheckoutForm({ formData, selectedPlan, mondayItemId, onBack }) {
             </div>
           </div>
 
-          {isRecurring && (
-            <p className="payment-recurring-note">
-              {selectedPlan.id.includes('semi')
-                ? `Your card will be charged ${selectedPlan.display} on the 1st and 15th of each month for 10 months.`
-                : `Your card will be charged ${selectedPlan.display} monthly for 10 months.`}{' '}
-              You can cancel anytime.
-            </p>
-          )}
+          <p className="payment-recurring-note">
+            Your card will be charged {selectedPlan?.display} monthly for 10 months.
+            You can cancel anytime.
+          </p>
 
           {errorMsg && (
             <div className="payment-error">

@@ -81,7 +81,7 @@ export default function RegistrationForm({ formData, setFormData, setMondayItemI
           &larr; Back to Home
         </Link>
         <div className="form-header">
-          <p className="form-step-label">Step 1 of 3</p>
+          <p className="form-step-label">Step 1 of 2</p>
           <h1 className="form-title">Join the Circle</h1>
           <p className="form-subtitle">
             Register for the next CreativeCircle cohort.

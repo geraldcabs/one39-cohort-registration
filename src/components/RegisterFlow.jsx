@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import RegistrationForm from './RegistrationForm'
-import PricingPage from './PricingPage'
 import PaymentPage from './PaymentPage'
 
 export default function RegisterFlow() {
@@ -17,7 +16,6 @@ export default function RegisterFlow() {
     termsAccepted: false,
     noRecordingAccepted: false,
   })
-  const [selectedPlan, setSelectedPlan] = useState(null)
   const [mondayItemId, setMondayItemId] = useState(null)
 
   return (
@@ -39,19 +37,10 @@ export default function RegisterFlow() {
           />
         )}
         {step === 2 && (
-          <PricingPage
-            selectedPlan={selectedPlan}
-            setSelectedPlan={setSelectedPlan}
-            onNext={() => setStep(3)}
-            onBack={() => setStep(1)}
-          />
-        )}
-        {step === 3 && (
           <PaymentPage
             formData={formData}
-            selectedPlan={selectedPlan}
             mondayItemId={mondayItemId}
-            onBack={() => setStep(2)}
+            onBack={() => setStep(1)}
           />
         )}
       </main>
