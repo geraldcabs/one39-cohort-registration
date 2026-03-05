@@ -63,7 +63,8 @@ async function updateMondayItem({ mondayItemId, planLabel, customerId, subscript
     const today = new Date().toISOString().split('T')[0];
 
     const columnValues = {
-      "color_mm0p9d9c": { "label": "Paid" },
+      "color_mm14can9": { "label": "Paid" },
+      "color_mm0p9d9c": { "label": "Active" },
       "date_mm0pa9c9": { "date": today },
       "text_mm0prvc5": customerId,
       "text_mm0pj8hf": subscriptionId,

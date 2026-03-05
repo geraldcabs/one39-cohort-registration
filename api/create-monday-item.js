@@ -63,7 +63,7 @@ export default async function handler(req, res) {
       "phone_mm0p7k3y": { "phone": phone, "countryShortName": "US" },
       "date_mm0ptyex": { "date": today },
       "date_mm0pa9c9": { "date": today },
-      "color_mm0p9d9c": { "label": "Abandoned" },
+      "color_mm14can9": { "label": "Abandoned" },
       "text_mm0zpx5": churchName || '',
       "text_mm133myq": coach,
     };
