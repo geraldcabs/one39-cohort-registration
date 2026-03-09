@@ -296,11 +296,6 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
           </div>
         </div>
 
-        <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', marginTop: '1rem' }}>
-          * Group pricing is available. Email{' '}
-          <a href="mailto:kylie@one39.co" style={{ color: 'var(--gold)' }}>kylie@one39.co</a>
-        </p>
-
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '1.5rem' }}>
             <label className="form-label" style={{ marginBottom: '0.75rem' }}>
@@ -362,6 +357,10 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
           <p className="payment-recurring-note">
             Your card will be charged {displayPrice} monthly for 10 months.
             You can cancel anytime.
+          </p>
+          <p className="payment-recurring-note" style={{ marginTop: '0.25rem' }}>
+            * Group pricing is available. Email{' '}
+            <a href="mailto:kylie@one39.co" style={{ color: 'var(--gold)' }}>kylie@one39.co</a>
           </p>
 
           {errorMsg && (
