@@ -110,7 +110,7 @@ async function updateMondayItem({ mondayItemId, planLabel, customerId, subscript
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { customerId, paymentMethodId, planId, coach, churchName, position, name, email, phone, mondayItemId } = req.body;
+  const { customerId, paymentMethodId, planId, coach, churchName, position, name, email, phone, mondayItemId, couponId } = req.body;
 
   const plan = PLANS[planId];
   if (!plan) return res.status(400).json({ error: 'Invalid plan' });
@@ -210,6 +210,7 @@ export default async function handler(req, res) {
       default_payment_method: paymentMethodId,
       cancel_at: cancelAt,
       metadata: { coach, churchName, position, planId },
+      ...(couponId ? { coupon: couponId } : {}),
     });
     console.log('✅ Subscription created:', subscription.id);
 

@@ -45,6 +45,10 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
   const [status, setStatus] = useState('idle')
   const [errorMsg, setErrorMsg] = useState('')
   const [cardComplete, setCardComplete] = useState(false)
+  const [promoCode, setPromoCode] = useState('')
+  const [promoStatus, setPromoStatus] = useState('idle')
+  const [promoError, setPromoError] = useState('')
+  const [appliedPromo, setAppliedPromo] = useState(null)
 
   useEffect(() => {
     window.parent.postMessage({ 
@@ -60,6 +64,43 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
     const id = earlyBirdActive ? 'early-monthly' : 'general-monthly'
     return PLANS.find((p) => p.id === id)
   }, [earlyBirdActive])
+
+  const discountedPrice = useMemo(() => {
+    if (!selectedPlan || !appliedPromo) return null
+    if (appliedPromo.discountType === 'percent') {
+      return Math.round(selectedPlan.price * (1 - appliedPromo.discountValue / 100))
+    }
+    if (appliedPromo.discountType === 'fixed') {
+      return Math.max(0, selectedPlan.price - appliedPromo.discountValue / 100)
+    }
+    return null
+  }, [selectedPlan, appliedPromo])
+
+  const displayPrice = discountedPrice !== null ? `$${discountedPrice}` : selectedPlan?.display
+
+  async function handleApplyPromo() {
+    if (!promoCode.trim()) return
+    setPromoStatus('validating')
+    setPromoError('')
+    try {
+      const res = await fetch('/api/validate-promo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: promoCode.trim() }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setPromoError(data.error || 'Invalid promo code')
+        setPromoStatus('idle')
+        return
+      }
+      setAppliedPromo(data)
+      setPromoStatus('applied')
+    } catch {
+      setPromoError('Unable to validate promo code')
+      setPromoStatus('idle')
+    }
+  }
 
  async function handleSubmit(e) {
   e.preventDefault()
@@ -127,6 +168,7 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
         email: formData.email,
         phone: formData.phone,
         mondayItemId,
+        ...(appliedPromo ? { couponId: appliedPromo.couponId } : {}),
       }),
     })
 
@@ -219,7 +261,14 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
               {selectedPlan?.name}
             </span>
             <span className="order-value" style={{ fontWeight: 800 }}>
-              {selectedPlan?.display}{selectedPlan?.interval}
+              {appliedPromo ? (
+                <>
+                  <span style={{ textDecoration: 'line-through', opacity: 0.4, marginRight: '0.35rem' }}>{selectedPlan?.display}</span>
+                  {displayPrice}{selectedPlan?.interval}
+                </>
+              ) : (
+                <>{selectedPlan?.display}{selectedPlan?.interval}</>
+              )}
             </span>
           </div>
           {earlyBirdActive && (
@@ -253,6 +302,51 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
         </p>
 
         <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label className="form-label" style={{ marginBottom: '0.75rem' }}>
+              Promo Code
+            </label>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="Enter code"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                disabled={promoStatus === 'applied'}
+                style={{ flex: 1 }}
+              />
+              {promoStatus !== 'applied' ? (
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={handleApplyPromo}
+                  disabled={promoStatus === 'validating' || !promoCode.trim()}
+                  style={{ whiteSpace: 'nowrap', padding: '0 1.25rem' }}
+                >
+                  {promoStatus === 'validating' ? 'Checking...' : 'Apply'}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={() => { setAppliedPromo(null); setPromoCode(''); setPromoStatus('idle') }}
+                  style={{ whiteSpace: 'nowrap', padding: '0 1.25rem' }}
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+            {promoError && (
+              <span className="form-error" style={{ marginTop: '0.5rem', display: 'block' }}>{promoError}</span>
+            )}
+            {promoStatus === 'applied' && appliedPromo && (
+              <p style={{ color: 'var(--gold)', fontSize: '0.85rem', marginTop: '0.5rem' }}>
+                {appliedPromo.code} applied — {appliedPromo.label}
+              </p>
+            )}
+          </div>
+
           <div className="stripe-card-wrapper">
             <label className="form-label" style={{ marginBottom: '0.75rem' }}>
               Card Details
@@ -266,7 +360,7 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
           </div>
 
           <p className="payment-recurring-note">
-            Your card will be charged {selectedPlan?.display} monthly for 10 months.
+            Your card will be charged {displayPrice} monthly for 10 months.
             You can cancel anytime.
           </p>
 
@@ -292,7 +386,7 @@ function CheckoutForm({ formData, mondayItemId, onBack }) {
             >
               {status === 'processing'
                 ? 'Processing...'
-                : `Pay ${selectedPlan?.display}${selectedPlan?.interval || ''}`}
+                : `Pay ${displayPrice}${selectedPlan?.interval || ''}`}
             </button>
           </div>
         </form>
