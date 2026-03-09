@@ -1,4 +1,4 @@
-export const EARLY_BIRD_END = new Date('2026-03-08T23:12:00-05:00')
+export const EARLY_BIRD_END = new Date('2026-03-09T00:00:00-08:00')
 
 export const PLANS = [
   {
