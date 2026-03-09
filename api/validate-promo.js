@@ -12,15 +12,16 @@ export default async function handler(req, res) {
     const promos = await stripe.promotionCodes.list({
       code: code.trim(),
       active: true,
-      expand: ['data.coupon'],
+      expand: ['data.promotion.coupon'],
     });
+
 
     if (!promos.data.length) {
       return res.status(400).json({ error: 'Invalid or expired promo code' });
     }
 
     const promo = promos.data[0];
-    const coupon = promo.coupon;
+    const coupon = promo.promotion?.coupon; 
 
     if (!coupon || !coupon.valid) {
       return res.status(400).json({ error: 'This promo code has expired' });
