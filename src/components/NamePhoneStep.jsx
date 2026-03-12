@@ -1,13 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useCountdown } from '../hooks/useCountdown'
-import { EARLY_BIRD_END } from '../data/pricing'
 
 export default function NamePhoneStep({ formData, setFormData, setMondayItemId, onNext }) {
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
-  const countdown = useCountdown(EARLY_BIRD_END)
-  const earlyBirdActive = countdown !== null
 
   function update(field, value) {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -68,11 +64,6 @@ export default function NamePhoneStep({ formData, setFormData, setMondayItemId, 
           <h1 className="form-title">Join the Circle</h1>
           <p className="form-subtitle">
             Register for the next CreativeCircle cohort.
-          </p>
-          <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', marginTop: '0.75rem' }}>
-            {earlyBirdActive
-              ? '* $299/Month for the first 139 hours'
-              : '* $399/Month'}
           </p>
         </div>
 

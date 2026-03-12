@@ -81,6 +81,11 @@ export default function RegistrationForm({ formData, setFormData, mondayItemId, 
           <p className="form-subtitle">
             Select your coach and complete your registration.
           </p>
+          <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', marginTop: '0.75rem' }}>
+            {earlyBirdActive
+              ? '* $299/Month for the first 139 hours'
+              : '* $399/Month'}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
@@ -197,11 +202,6 @@ export default function RegistrationForm({ formData, setFormData, mondayItemId, 
           <button type="submit" className="btn-primary" disabled={submitting}>
             {submitting ? 'Submitting...' : 'Continue to Payment'}
           </button>
-          <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', marginTop: '0.75rem', textAlign: 'center' }}>
-            {earlyBirdActive
-              ? '* $299/Month for the first 139 hours'
-              : '* $399/Month'}
-          </p>
         </form>
       </div>
 
